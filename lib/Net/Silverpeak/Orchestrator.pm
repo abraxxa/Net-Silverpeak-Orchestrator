@@ -189,4 +189,20 @@ sub list_template_applianceassociations($self) {
     return $res->data;
 }
 
+=method list_applianceids_by_templategroupname
+
+Returns an arrayref of appliance IDs a templategroup is assigned to.
+
+=cut
+
+sub list_applianceids_by_templategroupname($self, $name) {
+    my $associations = $self->list_template_applianceassociations;
+    my @appliance_ids;
+    for my $appliance_id (keys %$associations) {
+        push @appliance_ids, $appliance_id
+            if any { $_ eq $name } $associations->{$appliance_id}->@*;
+    }
+    return \@appliance_ids;
+}
+
 1;

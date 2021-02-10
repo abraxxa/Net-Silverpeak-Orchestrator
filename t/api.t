@@ -97,4 +97,12 @@ is($orchestrator->list_template_applianceassociations,
         etc();
     },
     'list_template_applianceassociations ok');
+
+is($orchestrator->list_applianceids_by_templategroupname('LocalSecurity'),
+    array {
+        all_items match qr/^[0-9]+\.[A-Z]+$/;
+
+        etc();
+    },
+    'list_appliances_by_templategroupname ok');
 done_testing();
