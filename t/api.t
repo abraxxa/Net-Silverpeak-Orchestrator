@@ -105,4 +105,7 @@ is($orchestrator->list_applianceids_by_templategroupname('LocalSecurity'),
         etc();
     },
     'list_appliances_by_templategroupname ok');
+
+ok($orchestrator->logout, 'logout of Silverpeak Orchestrator successful');
+
 done_testing();
