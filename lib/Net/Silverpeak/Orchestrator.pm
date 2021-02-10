@@ -163,4 +163,17 @@ sub list_appliances($self) {
     return $res->data;
 }
 
+=method get_appliance
+
+Returns an appliance by id.
+
+=cut
+
+sub get_appliance($self, $id) {
+    my $res = $self->get('/gms/rest/appliance/' . $id);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 1;

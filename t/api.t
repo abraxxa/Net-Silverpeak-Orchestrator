@@ -81,4 +81,14 @@ is(my $appliances = $orchestrator->list_appliances,
     },
     'list_appliances ok');
 
+ok(
+    dies { $orchestrator->get_appliance('not-existing') },
+    'get_appliance for not existing appliance throws exception'
+);
+
+is($orchestrator->get_appliance($appliances->[0]->{id}),
+    hash {
+        etc();
+    },
+    'get_appliance for existing appliance ok');
 done_testing();
