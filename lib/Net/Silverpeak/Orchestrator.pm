@@ -176,4 +176,17 @@ sub get_appliance($self, $id) {
     return $res->data;
 }
 
+=method list_template_applianceassociations
+
+Returns a hashref of template to appliances associations.
+
+=cut
+
+sub list_template_applianceassociations($self) {
+    my $res = $self->get('/gms/rest/template/applianceAssociation');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 1;

@@ -91,4 +91,10 @@ is($orchestrator->get_appliance($appliances->[0]->{id}),
         etc();
     },
     'get_appliance for existing appliance ok');
+
+is($orchestrator->list_template_applianceassociations,
+    hash {
+        etc();
+    },
+    'list_template_applianceassociations ok');
 done_testing();
