@@ -75,4 +75,10 @@ ok(
         });
     }, 'update_templategroup successful') or note($@);
 
+is(my $appliances = $orchestrator->list_appliances,
+    array {
+        etc();
+    },
+    'list_appliances ok');
+
 done_testing();

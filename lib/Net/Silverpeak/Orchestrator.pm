@@ -150,4 +150,17 @@ sub update_templategroup($self, $name, $data) {
     return $res->data;
 }
 
+=method list_appliances
+
+Returns an arrayref of appliances.
+
+=cut
+
+sub list_appliances($self) {
+    my $res = $self->get('/gms/rest/appliance');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 1;
