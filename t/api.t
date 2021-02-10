@@ -20,6 +20,9 @@ my $orchestrator = Net::Silverpeak::Orchestrator->new(
 
 ok($orchestrator->login, 'login to Silverpeak Orchestrator successful');
 
+like($orchestrator->get_version, qr/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/,
+    'get_version ok');
+
 is($orchestrator->list_templategroups,
     array {
         etc();

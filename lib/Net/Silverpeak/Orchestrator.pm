@@ -92,6 +92,20 @@ sub logout($self) {
     return 1;
 }
 
+=method get_version
+
+Returns the Silverpeak Orchestrator version.
+
+=cut
+
+sub get_version($self) {
+    my $res = $self->get('/gms/rest/gms/versions');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+
+    return $res->data->{current};
+}
+
 =method list_templategroups
 
 Returns an arrayref of template groups.
