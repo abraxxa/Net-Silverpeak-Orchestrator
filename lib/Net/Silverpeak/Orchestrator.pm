@@ -132,4 +132,22 @@ sub get_templategroup($self, $name) {
     return $res->data;
 }
 
+=method update_templategroup
+
+Takes a template group name and a hashref of template configs.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub update_templategroup($self, $name, $data) {
+    my $res = $self->post('/gms/rest/template/templateGroups/' . $name,
+        $data);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 1;

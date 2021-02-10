@@ -55,6 +55,24 @@ ok(exists $security_template->{value}->{data}->{map1}->{'0_0'}->{prio}
         eq 'HASH',
     'securityMaps return data structure as expected');
 
-print Dumper($security_template->{value}->{data}->{map1}->{'0_0'}->{prio});
+my $rules = $security_template->{value}->{data}->{map1}->{'0_0'}->{prio};
+# print Dumper($rules);
+$rules->{1010}->{misc}->{rule} =
+    $rules->{1010}->{misc}->{rule} eq 'enable'
+    ? 'disable'
+    : 'enable';
+
+ok(
+    lives {
+        $orchestrator->update_templategroup('LocalSecurity', {
+            name => 'LocalSecurity',
+            templates => [
+                {
+                    name      => 'securityMaps',
+                    valObject => $security_template->{value},
+                }
+            ]
+        });
+    }, 'update_templategroup successful') or note($@);
 
 done_testing();
