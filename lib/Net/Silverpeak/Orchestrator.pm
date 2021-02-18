@@ -28,30 +28,81 @@ no warnings "experimental::signatures";
 
     $orchestrator->login;
 
+    # OR
+
+    $orchestrator = Net::Silverpeak::Orchestrator->new(
+        server      => 'https://orchestrator.example.com',
+        api_key     => '$api-key',
+        clientattrs => { timeout => 30 },
+    );
+
 =head1 DESCRIPTION
 
 This module is a client library for the Silverpeak Orchestrator REST API.
 Currently it is developed and tested against version 9.0.2.
+
+=head1 KNOWN SILVERPEAK ORCHESTRATOR BUGS
+
+=over
+
+=item http 500 response on api key authentication
+
+Orchestrator versions before version 9.0.4 respond with a http 500 error on
+every request using an api key that has no expriation date set.
+The only workaround is to set an expiration date for it.
+
+=back
+
+=for Pod::Coverage has_user has_passwd has_api_key
 
 =cut
 
 has 'user' => (
     isa => Str,
     is  => 'rw',
+    predicate => 1,
 );
 has 'passwd' => (
     isa => Str,
     is  => 'rw',
+    predicate => 1,
+);
+has 'api_key' => (
+    isa => Str,
+    is  => 'rw',
+    predicate => 1,
 );
 
 with 'Role::REST::Client';
 
+has '+persistent_headers' => (
+    default => sub {
+        my $self = shift;
+        my %headers;
+        $headers{'X-Auth-Token'} = $self->api_key
+            if $self->has_api_key;
+        return \%headers;
+    },
+);
+
+around 'do_request' => sub($orig, $self, $method, $uri, $opts) {
+    # $uri .= '?apiKey='  . $self->api_key
+    #     if $self->has_api_key;
+    # warn 'request: ' . Dumper([$method, $uri, $opts]);
+    my $response = $orig->($self, $method, $uri, $opts);
+    # warn 'response: ' .  Dumper($response);
+    return $response;
+};
+
 sub _build_user_agent ($self) {
     require HTTP::Thin;
-    return HTTP::Thin->new(
-        %{$self->clientattrs},
-        cookie_jar => HTTP::CookieJar->new
-    );
+
+    my %params = $self->clientattrs->%*;
+    if ($self->has_user && $self->has_passwd) {
+        $params{cookie_jar} = HTTP::CookieJar->new;
+    }
+
+    return HTTP::Thin->new(%params);
 }
 
 sub _error_handler ($self, $res) {
@@ -63,10 +114,14 @@ sub _error_handler ($self, $res) {
 =method login
 
 Logs into the Silverpeak Orchestrator.
+Only required when using username and password, not for api key.
 
 =cut
 
 sub login($self) {
+    die "user and password required\n"
+        unless $self->has_user && $self->has_passwd;
+
     my $res = $self->post('/gms/rest/authentication/login', {
         user     => $self->user,
         password => $self->passwd,
@@ -81,10 +136,14 @@ sub login($self) {
 =method logout
 
 Logs out of the Silverpeak Orchestrator.
+Only possible when using username and password, not for api key.
 
 =cut
 
 sub logout($self) {
+    die "user and password required\n"
+        unless $self->has_user && $self->has_passwd;
+
     my $res = $self->get('/gms/rest/authentication/logout');
     $self->_error_handler($res)
         unless $res->code == 200;
