@@ -40,10 +40,6 @@ subtest 'user/password authentication' => sub {
         },
         'get_templategroup for existing template group ok');
 
-    use Data::Dumper::Concise;
-    # $Data::Dumper::Maxdepth = 2;
-    # print Dumper($templategroup->{selectedTemplates});
-
     my ($security_template) = grep { $_->{name} eq 'securityMaps' }
         $templategroup->{selectedTemplates}->@*;
 
@@ -55,7 +51,6 @@ subtest 'user/password authentication' => sub {
         'securityMaps return data structure as expected');
 
     my $rules = $security_template->{value}->{data}->{map1}->{'0_0'}->{prio};
-    # print Dumper($rules);
     $rules->{1010}->{misc}->{rule} =
         $rules->{1010}->{misc}->{rule} eq 'enable'
         ? 'disable'
