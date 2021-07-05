@@ -415,4 +415,17 @@ sub delete_addressgroup($self, $name) {
     return 1;
 }
 
+=method list_servicegroup_names
+
+Returns an arrayref of service group names.
+
+=cut
+
+sub list_servicegroup_names($self) {
+    my $res = $self->get('/gms/rest/ipObjects/serviceGroupNames');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 1;

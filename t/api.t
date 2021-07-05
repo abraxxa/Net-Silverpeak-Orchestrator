@@ -302,4 +302,14 @@ subtest_buffered 'address groups' => sub {
         'delete_addressgroup ok');
 };
 
+subtest_buffered 'service groups' => sub {
+    is($orchestrator->list_servicegroup_names,
+        bag {
+            all_items match qr/^[a-zA-Z0-9_\-\.]+$/;
+
+            end();
+        },
+        'list_servicegroup_names ok');
+};
+
 done_testing();
