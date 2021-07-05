@@ -249,6 +249,23 @@ sub update_templategroup($self, $name, $data) {
     return $res->data;
 }
 
+=method delete_templategroup
+
+Takes a template group name.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub delete_templategroup($self, $name) {
+    my $res = $self->delete('/gms/rest/template/templateGroups/' . $name);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 =method list_appliances
 
 Returns an arrayref of appliances.
