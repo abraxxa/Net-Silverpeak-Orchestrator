@@ -441,6 +441,19 @@ sub list_servicegroup_names($self) {
     return $res->data;
 }
 
+=method get_servicegroup
+
+Returns a service group by name.
+
+=cut
+
+sub get_servicegroup($self, $name) {
+    my $res = $self->get('/gms/rest/ipObjects/serviceGroup/' . $name);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method create_or_update_servicegroup
 
 Takes a service group name and a hashref of service group config.

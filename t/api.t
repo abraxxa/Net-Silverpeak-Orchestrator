@@ -380,6 +380,76 @@ subtest_buffered 'service groups' => sub {
             ],
         }),
         'create_or_update_servicegroup ok');
+
+    is($orchestrator->get_servicegroup('Testgroup1'),
+        hash {
+            field name => 'Testgroup1';
+            field type => 'SG';
+            field rules => array {
+                item hash {
+                    field protocol => 'TCP';
+                    field includedPorts => array {
+                        item '53';
+                        item '88';
+                        item '135';
+                        item '137-139';
+                        item '389';
+                        item '445';
+                        item '464';
+                        item '636';
+                        item '3268';
+                        item '3269';
+                        item '9389';
+                        item '49152-65535';
+
+                        end();
+                    };
+                    field excludedPorts => array {
+                        end();
+                    };
+                    field includedGroups => array {
+                        end();
+                    };
+                    field excludedGroups => array {
+                        end();
+                    };
+                    field comment => U();
+
+                    end();
+                };
+
+                item hash {
+                    field protocol => 'UDP';
+                    field includedPorts => array {
+                        item '53';
+                        item '88';
+                        item '123';
+                        item '137-139';
+                        item '389';
+                        item '464';
+
+                        end();
+                    };
+                    field excludedPorts => array {
+                        end();
+                    };
+                    field includedGroups => array {
+                        end();
+                    };
+                    field excludedGroups => array {
+                        end();
+                    };
+                    field comment => U();
+
+                    end();
+                };
+
+                end();
+            };
+
+            end();
+        },
+        'get_servicegroup ok');
 };
 
 done_testing();
