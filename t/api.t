@@ -242,4 +242,7 @@ is($orchestrator->get_addressgroup('Testgroup1'),
     },
     'get_addressgroup ok');
 
+ok($orchestrator->delete_addressgroup('Testgroup1'),
+    'delete_addressgroup ok');
+
 done_testing();

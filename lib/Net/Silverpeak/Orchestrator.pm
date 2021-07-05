@@ -379,4 +379,21 @@ sub create_or_update_addressgroup($self, $name, $data) {
     return 1;
 }
 
+=method delete_addressgroup
+
+Takes a address group name.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub delete_addressgroup($self, $name) {
+    my $res = $self->delete('/gms/rest/ipObjects/addressGroup/' . $name);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 1;
