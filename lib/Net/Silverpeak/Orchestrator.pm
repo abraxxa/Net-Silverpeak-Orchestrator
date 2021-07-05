@@ -473,4 +473,21 @@ sub create_or_update_servicegroup($self, $name, $data) {
     return 1;
 }
 
+=method delete_servicegroup
+
+Takes a service group name.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub delete_servicegroup($self, $name) {
+    my $res = $self->delete('/gms/rest/ipObjects/serviceGroup/' . $name);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 1;

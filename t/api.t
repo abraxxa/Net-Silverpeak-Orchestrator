@@ -450,6 +450,9 @@ subtest_buffered 'service groups' => sub {
             end();
         },
         'get_servicegroup ok');
+
+    ok($orchestrator->delete_servicegroup('Testgroup1'),
+        'delete_servicegroup ok');
 };
 
 done_testing();
