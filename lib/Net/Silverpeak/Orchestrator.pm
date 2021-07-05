@@ -210,6 +210,27 @@ sub create_templategroup($self, $name, $data = {}) {
     return 1;
 }
 
+=method update_templates_of_templategroup
+
+Takes a template group name and an arrayref of template names.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub update_templates_of_templategroup($self, $name, $templatenames) {
+    croak('templates names must be passed as an arrayref')
+        unless ref $templatenames eq 'ARRAY';
+
+    my $res = $self->post('/gms/rest/template/templateSelection/' . $name,
+        $templatenames);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method update_templategroup
 
 Takes a template group name and a hashref of template configs.
