@@ -154,5 +154,13 @@ SKIP: {
         'list_appliances_by_templategroupname ok');
 }
 
+is($orchestrator->list_addressgroup_names,
+    bag {
+        all_items match qr/^[a-zA-Z0-9_\-\.]+$/;
+
+        end();
+    },
+    'list_addressgroup_names ok');
+
 
 done_testing();
