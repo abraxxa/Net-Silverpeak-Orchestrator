@@ -1,5 +1,6 @@
 use Test2::V0;
 use Test2::Tools::Compare qw( array bag hash );
+use Test2::Tools::Subtest qw( subtest_buffered );
 use Net::Silverpeak::Orchestrator;
 
 skip_all "environment variables not set"
@@ -154,31 +155,35 @@ SKIP: {
         'list_appliances_by_templategroupname ok');
 }
 
-is($orchestrator->list_addressgroup_names,
-    bag {
-        all_items match qr/^[a-zA-Z0-9_\-\.]+$/;
+subtest_buffered 'address groups' => sub {
+    is($orchestrator->list_addressgroup_names,
+        bag {
+            all_items match qr/^[a-zA-Z0-9_\-\.]+$/;
 
-        end();
-    },
-    'list_addressgroup_names ok');
+            end();
+        },
+        'list_addressgroup_names ok');
 
-is($orchestrator->list_addressgroups,
-    bag {
-        all_items hash {
-            field name => match qr/^[a-zA-Z0-9_\-\.]+$/;
-            field type => 'AG';
-            field rules => bag {
-                all_items hash {
-                    field includedIPs => array {
-                        etc();
+    is($orchestrator->list_addressgroups,
+        bag {
+            all_items hash {
+                field name => match qr/^[a-zA-Z0-9_\-\.]+$/;
+                field type => 'AG';
+                field rules => bag {
+                    all_items hash {
+                        field includedIPs => array {
+                            etc();
+                        };
+                        field excludedIPs => array {
+                            etc();
+                        };
+                        field includedGroups => array {
+                            etc();
+                        };
+                        field comment => E();
+
+                        end();
                     };
-                    field excludedIPs => array {
-                        etc();
-                    };
-                    field includedGroups => array {
-                        etc();
-                    };
-                    field comment => E();
 
                     end();
                 };
@@ -187,116 +192,114 @@ is($orchestrator->list_addressgroups,
             };
 
             end();
-        };
+        },
+        'list_addressgroups ok');
 
-        end();
-    },
-    'list_addressgroups ok');
-
-ok($orchestrator->create_or_update_addressgroup('Testgroup1', {
-        rules => [
-            {
-                includedIPs => [qw(
-                    10.2.0.0/24
-                    10.3.0.1-15
-                    10.0.0.2
-                    10.0.0.1
-                    10.3.0.30-40
-                    10.1.0.0/24
-                )],
-            },
-        ],
-    }),
-    'create_or_update_addressgroup ok');
-
-is($orchestrator->get_addressgroup('Testgroup1'),
-    hash {
-        field name => 'Testgroup1';
-        field type => 'AG';
-        field rules => array {
-            item hash {
-                field includedIPs => array {
-                    item '10.2.0.0/24';
-                    item '10.3.0.1-15';
-                    item '10.0.0.2';
-                    item '10.0.0.1';
-                    item '10.3.0.30-40';
-                    item '10.1.0.0/24';
-                    end();
-                };
-                field excludedIPs => array {
-                    end();
-                };
-                field includedGroups => array {
-                    end();
-                };
-                field comment => U();
-
-                end();
-            };
-
-            end();
-        };
-
-        end();
-    },
-    'get_addressgroup ok');
-
-ok($orchestrator->update_addressgroup('Testgroup1', {
-        rules => [
-            {
-                includedIPs => [qw(
-                    10.3.0.1-15
-                    10.0.0.1
-                    10.1.0.0/24
-                )],
-            },
-        ],
-    }),
-    'update_addressgroup ok');
-
-is($orchestrator->get_addressgroup('Testgroup1'),
-    hash {
-        field name => 'Testgroup1';
-        field type => 'AG';
-        field rules => array {
-            item hash {
-                field includedIPs => array {
-                    item '10.3.0.1-15';
-                    item '10.0.0.1';
-                    item '10.1.0.0/24';
-                    end();
-                };
-                field excludedIPs => array {
-                    end();
-                };
-                field includedGroups => array {
-                    end();
-                };
-                field comment => U();
-
-                end();
-            };
-
-            end();
-        };
-
-        end();
-    },
-    'data after update_addressgroup ok');
-
-ok(
-    dies { $orchestrator->update_addressgroup('not-existing', {
+    ok($orchestrator->create_or_update_addressgroup('Testgroup1', {
             rules => [
                 {
-                    includedIPs => [qw( 0.0.0.1 )],
+                    includedIPs => [qw(
+                        10.2.0.0/24
+                        10.3.0.1-15
+                        10.0.0.2
+                        10.0.0.1
+                        10.3.0.30-40
+                        10.1.0.0/24
+                    )],
                 },
             ],
-        }) },
-    'update_addressgroup for not existing addressgroup throws exception'
-);
+        }),
+        'create_or_update_addressgroup ok');
 
-ok($orchestrator->delete_addressgroup('Testgroup1'),
-    'delete_addressgroup ok');
+    is($orchestrator->get_addressgroup('Testgroup1'),
+        hash {
+            field name => 'Testgroup1';
+            field type => 'AG';
+            field rules => array {
+                item hash {
+                    field includedIPs => array {
+                        item '10.2.0.0/24';
+                        item '10.3.0.1-15';
+                        item '10.0.0.2';
+                        item '10.0.0.1';
+                        item '10.3.0.30-40';
+                        item '10.1.0.0/24';
+                        end();
+                    };
+                    field excludedIPs => array {
+                        end();
+                    };
+                    field includedGroups => array {
+                        end();
+                    };
+                    field comment => U();
+
+                    end();
+                };
+
+                end();
+            };
+
+            end();
+        },
+        'get_addressgroup ok');
+
+    ok($orchestrator->update_addressgroup('Testgroup1', {
+            rules => [
+                {
+                    includedIPs => [qw(
+                        10.3.0.1-15
+                        10.0.0.1
+                        10.1.0.0/24
+                    )],
+                },
+            ],
+        }),
+        'update_addressgroup ok');
+
+    is($orchestrator->get_addressgroup('Testgroup1'),
+        hash {
+            field name => 'Testgroup1';
+            field type => 'AG';
+            field rules => array {
+                item hash {
+                    field includedIPs => array {
+                        item '10.3.0.1-15';
+                        item '10.0.0.1';
+                        item '10.1.0.0/24';
+                        end();
+                    };
+                    field excludedIPs => array {
+                        end();
+                    };
+                    field includedGroups => array {
+                        end();
+                    };
+                    field comment => U();
+
+                    end();
+                };
+
+                end();
+            };
+
+            end();
+        },
+        'data after update_addressgroup ok');
+
+    ok(
+        dies { $orchestrator->update_addressgroup('not-existing', {
+                rules => [
+                    {
+                        includedIPs => [qw( 0.0.0.1 )],
+                    },
+                ],
+            }) },
+        'update_addressgroup for not existing addressgroup throws exception'
+    );
+
+    ok($orchestrator->delete_addressgroup('Testgroup1'),
+        'delete_addressgroup ok');
+};
 
 done_testing();
