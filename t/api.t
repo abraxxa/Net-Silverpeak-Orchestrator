@@ -451,6 +451,117 @@ subtest_buffered 'service groups' => sub {
         },
         'get_servicegroup ok');
 
+    ok($orchestrator->update_servicegroup('Testgroup1', {
+        rules => [
+            {
+                protocol => 'TCP',
+                includedPorts => [qw(
+                    88
+                    135
+                    137-139
+                    389
+                    445
+                    464
+                    636
+                    3268
+                    3269
+                    9389
+                    49152-65535
+                )],
+            },
+            {
+                protocol => 'UDP',
+                includedPorts => [qw(
+                    88
+                    123
+                    137-139
+                    389
+                    464
+                )],
+            },
+        ],
+        }),
+        'update_servicegroup ok');
+
+    is($orchestrator->get_servicegroup('Testgroup1'),
+        hash {
+            field name => 'Testgroup1';
+            field type => 'SG';
+            field rules => array {
+                item hash {
+                    field protocol => 'TCP';
+                    field includedPorts => array {
+                        item '88';
+                        item '135';
+                        item '137-139';
+                        item '389';
+                        item '445';
+                        item '464';
+                        item '636';
+                        item '3268';
+                        item '3269';
+                        item '9389';
+                        item '49152-65535';
+
+                        end();
+                    };
+                    field excludedPorts => array {
+                        end();
+                    };
+                    field includedGroups => array {
+                        end();
+                    };
+                    field excludedGroups => array {
+                        end();
+                    };
+                    field comment => U();
+
+                    end();
+                };
+
+                item hash {
+                    field protocol => 'UDP';
+                    field includedPorts => array {
+                        item '88';
+                        item '123';
+                        item '137-139';
+                        item '389';
+                        item '464';
+
+                        end();
+                    };
+                    field excludedPorts => array {
+                        end();
+                    };
+                    field includedGroups => array {
+                        end();
+                    };
+                    field excludedGroups => array {
+                        end();
+                    };
+                    field comment => U();
+
+                    end();
+                };
+
+                end();
+            };
+
+            end();
+        },
+        'data after update_servicegroup ok');
+
+    ok(
+        dies { $orchestrator->update_servicegroup('not-existing', {
+                rules => [
+                    {
+                        includedPorts => [qw( 123 )],
+                    },
+                ],
+            }) },
+        'update_servicegroup for not existing servicegroup throws exception'
+    );
+
     ok($orchestrator->delete_servicegroup('Testgroup1'),
         'delete_servicegroup ok');
 };
