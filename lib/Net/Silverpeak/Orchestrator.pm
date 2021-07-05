@@ -441,4 +441,23 @@ sub list_servicegroup_names($self) {
     return $res->data;
 }
 
+=method create_or_update_servicegroup
+
+Takes a service group name and a hashref of service group config.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub create_or_update_servicegroup($self, $name, $data) {
+    $data->{name} = $name;
+    $data->{type} = 'SG';
+    my $res = $self->post('/gms/rest/ipObjects/serviceGroup', $data);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 1;

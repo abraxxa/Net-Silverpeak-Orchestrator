@@ -346,6 +346,40 @@ subtest_buffered 'service groups' => sub {
             end();
         },
         'list_servicegroups ok');
+
+    ok($orchestrator->create_or_update_servicegroup('Testgroup1', {
+            rules => [
+                {
+                    protocol => 'TCP',
+                    includedPorts => [qw(
+                        53
+                        88
+                        135
+                        137-139
+                        389
+                        445
+                        464
+                        636
+                        3268
+                        3269
+                        9389
+                        49152-65535
+                    )],
+                },
+                {
+                    protocol => 'UDP',
+                    includedPorts => [qw(
+                        53
+                        88
+                        123
+                        137-139
+                        389
+                        464
+                    )],
+                },
+            ],
+        }),
+        'create_or_update_servicegroup ok');
 };
 
 done_testing();
