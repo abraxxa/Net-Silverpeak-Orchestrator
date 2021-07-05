@@ -1,5 +1,5 @@
 use Test2::V0;
-use Test2::Tools::Compare qw( array hash );
+use Test2::Tools::Compare qw( array bag hash );
 use Net::Silverpeak::Orchestrator;
 
 skip_all "environment variables not set"
@@ -26,17 +26,47 @@ END {
 like($orchestrator->get_version, qr/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/,
     'get_version ok');
 
-is($orchestrator->list_templategroups,
+is(my $templategroups = $orchestrator->list_templategroups,
     array {
         etc();
     },
     'list_templategroups ok');
+
+isnt($templategroups,
+    bag {
+        item hash {
+            field name => $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY};
+            etc();
+        };
+
+        etc();
+    },
+    "template group '" . $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY} .
+        "' doesn't exist"
+);
 
 like(
     dies { $orchestrator->get_templategroup('not-existing') },
     qr/Failed to get Templates for group/,
     'get_templategroup for not existing template group throws exception'
 );
+
+ok($orchestrator->create_templategroup(
+    $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
+    "template group '" . $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY} .
+        "' created");
+
+END {
+    diag("deleting template group 'Net-Silverpeak-Orchestrator-Test'");
+    $orchestrator->delete_templategroup(
+        $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY})
+        if defined $orchestrator;
+}
+
+ok($orchestrator->update_templates_of_templategroup(
+    $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}, ['securityMaps']),
+    "Security Policy added to template group '" .
+    $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY} . "'");
 
 is(my $templategroup = $orchestrator->get_templategroup(
     $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
@@ -50,16 +80,28 @@ my ($security_template) = grep { $_->{name} eq 'securityMaps' }
 
 ok($security_template, 'securityMaps template found in template group');
 
-ok(exists $security_template->{value}->{data}->{map1}->{'0_0'}->{prio}
-    && ref $security_template->{value}->{data}->{map1}->{'0_0'}->{prio}
+ok(exists $security_template->{value}->{data}->{map1}
+    && ref $security_template->{value}->{data}->{map1}
         eq 'HASH',
     'securityMaps return data structure as expected');
 
-my $rules = $security_template->{value}->{data}->{map1}->{'0_0'}->{prio};
-$rules->{1010}->{misc}->{rule} =
-    $rules->{1010}->{misc}->{rule} eq 'enable'
-    ? 'disable'
-    : 'enable';
+$security_template->{value}->{data}->{map1}->{'0_0'}->{prio}->{1010} =
+    {
+        match=> {
+            dst_ip => "10.0.0.10/32|10.0.0.11/32",
+            dst_port => 53,
+            protocol => "udp",
+            src_ip => "10.0.0.0/24",
+        },
+        misc => {
+            logging => "disable",
+            rule => "enable",
+            tag => 'rule_1',
+        },
+        set => {
+            action => "allow",
+        },
+    };
 
 ok(
     lives {
