@@ -1,6 +1,8 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - fix hardcoded template group name instead of
+      NET_SILVERPEAK_ORCHESTRATOR_POLICY environment variable
 
 0.001002  2021-02-19 07:35:30+01:00 Europe/Vienna
     - fix Data::Dumper::Concise usage in t/api.t

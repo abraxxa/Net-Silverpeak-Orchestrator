@@ -34,7 +34,8 @@ subtest 'user/password authentication' => sub {
         'get_templategroup for not existing template group throws exception'
     );
 
-    is(my $templategroup = $orchestrator->get_templategroup('LocalSecurity'),
+    is(my $templategroup = $orchestrator->get_templategroup(
+        $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
         hash {
             etc();
         },
@@ -58,8 +59,9 @@ subtest 'user/password authentication' => sub {
 
     ok(
         lives {
-            $orchestrator->update_templategroup('LocalSecurity', {
-                name => 'LocalSecurity',
+            $orchestrator->update_templategroup(
+            $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}, {
+                name => $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY},
                 templates => [
                     {
                         name      => 'securityMaps',
@@ -92,7 +94,7 @@ subtest 'user/password authentication' => sub {
         },
         'list_template_applianceassociations ok');
 
-    is($orchestrator->list_applianceids_by_templategroupname('LocalSecurity'),
+    is($orchestrator->list_applianceids_by_templategroupname($ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
         array {
             all_items match qr/^[0-9]+\.[A-Z]+$/;
 
