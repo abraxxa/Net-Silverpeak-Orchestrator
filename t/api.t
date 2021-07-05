@@ -310,6 +310,42 @@ subtest_buffered 'service groups' => sub {
             end();
         },
         'list_servicegroup_names ok');
+
+    is($orchestrator->list_servicegroups,
+        bag {
+            all_items hash {
+                field name => match qr/^[a-zA-Z0-9_\-\.]+$/;
+                field type => 'SG';
+                field rules => bag {
+                    all_items hash {
+                        field protocol => D();
+
+                        field includedPorts => array {
+                            etc();
+                        };
+                        field excludedPorts => array {
+                            etc();
+                        };
+                        field includedGroups => array {
+                            etc();
+                        };
+                        field excludedGroups => array {
+                            etc();
+                        };
+                        field comment => E();
+
+                        end();
+                    };
+
+                    end();
+                };
+
+                end();
+            };
+
+            end();
+        },
+        'list_servicegroups ok');
 };
 
 done_testing();
