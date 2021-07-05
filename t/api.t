@@ -17,6 +17,12 @@ my $orchestrator = Net::Silverpeak::Orchestrator->new(
 
 ok($orchestrator->login, 'login to Silverpeak Orchestrator successful');
 
+END {
+    diag('logging out');
+    $orchestrator->logout
+        if defined $orchestrator;
+}
+
 like($orchestrator->get_version, qr/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/,
     'get_version ok');
 
@@ -106,6 +112,5 @@ SKIP: {
         'list_appliances_by_templategroupname ok');
 }
 
-ok($orchestrator->logout, 'logout of Silverpeak Orchestrator successful');
 
 done_testing();
