@@ -162,5 +162,36 @@ is($orchestrator->list_addressgroup_names,
     },
     'list_addressgroup_names ok');
 
+is($orchestrator->list_addressgroups,
+    bag {
+        all_items hash {
+            field name => match qr/^[a-zA-Z0-9_\-\.]+$/;
+            field type => 'AG';
+            field rules => bag {
+                all_items hash {
+                    field includedIPs => array {
+                        etc();
+                    };
+                    field excludedIPs => array {
+                        etc();
+                    };
+                    field includedGroups => array {
+                        etc();
+                    };
+                    field comment => E();
+
+                    end();
+                };
+
+                end();
+            };
+
+            end();
+        };
+
+        end();
+    },
+    'list_addressgroups ok');
+
 
 done_testing();

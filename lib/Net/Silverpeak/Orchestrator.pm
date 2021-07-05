@@ -321,6 +321,19 @@ sub list_applianceids_by_templategroupname($self, $name) {
     return \@appliance_ids;
 }
 
+=method list_addressgroups
+
+Returns an arrayref of address groups.
+
+=cut
+
+sub list_addressgroups($self) {
+    my $res = $self->get('/gms/rest/ipObjects/addressGroup');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_addressgroup_names
 
 Returns an arrayref of address group names.
