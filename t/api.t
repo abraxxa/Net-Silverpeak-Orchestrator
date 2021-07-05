@@ -82,25 +82,31 @@ subtest 'user/password authentication' => sub {
         'get_appliance for not existing appliance throws exception'
     );
 
-    is($orchestrator->get_appliance($appliances->[0]->{id}),
-        hash {
-            etc();
-        },
-        'get_appliance for existing appliance ok');
-
     is($orchestrator->list_template_applianceassociations,
         hash {
             etc();
         },
         'list_template_applianceassociations ok');
 
-    is($orchestrator->list_applianceids_by_templategroupname($ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
-        array {
-            all_items match qr/^[0-9]+\.[A-Z]+$/;
+    SKIP: {
+        skip "Orchestrator has no appliances"
+            unless $appliances->@*;
 
-            etc();
-        },
-        'list_appliances_by_templategroupname ok');
+        is($orchestrator->get_appliance($appliances->[0]->{id}),
+            hash {
+                etc();
+            },
+            'get_appliance for existing appliance ok');
+
+        is($orchestrator->list_applianceids_by_templategroupname(
+            $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
+            array {
+                all_items match qr/^[0-9]+\.[A-Z]+$/;
+
+                etc();
+            },
+            'list_appliances_by_templategroupname ok');
+    }
 
     ok($orchestrator->logout, 'logout of Silverpeak Orchestrator successful');
     };
