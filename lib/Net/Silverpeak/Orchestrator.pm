@@ -379,6 +379,25 @@ sub create_or_update_addressgroup($self, $name, $data) {
     return 1;
 }
 
+=method update_addressgroup
+
+Takes a address group name and a hashref of address group config.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub update_addressgroup($self, $name, $data) {
+    $data->{name} = $name;
+    $data->{type} = 'AG';
+    my $res = $self->put('/gms/rest/ipObjects/addressGroup', $data);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 =method delete_addressgroup
 
 Takes a address group name.
