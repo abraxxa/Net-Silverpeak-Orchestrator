@@ -347,6 +347,19 @@ sub list_addressgroup_names($self) {
     return $res->data;
 }
 
+=method get_addressgroup
+
+Returns a address group by name.
+
+=cut
+
+sub get_addressgroup($self, $name) {
+    my $res = $self->get('/gms/rest/ipObjects/addressGroup/' . $name);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method create_or_update_addressgroup
 
 Takes a address group name and a hashref of address group config.

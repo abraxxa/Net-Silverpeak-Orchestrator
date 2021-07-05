@@ -209,4 +209,37 @@ ok($orchestrator->create_or_update_addressgroup('Testgroup1', {
     }),
     'create_or_update_addressgroup ok');
 
+is($orchestrator->get_addressgroup('Testgroup1'),
+    hash {
+        field name => 'Testgroup1';
+        field type => 'AG';
+        field rules => array {
+            item hash {
+                field includedIPs => array {
+                    item '10.2.0.0/24';
+                    item '10.3.0.1-15';
+                    item '10.0.0.2';
+                    item '10.0.0.1';
+                    item '10.3.0.30-40';
+                    item '10.1.0.0/24';
+                    end();
+                };
+                field excludedIPs => array {
+                    end();
+                };
+                field includedGroups => array {
+                    end();
+                };
+                field comment => U();
+
+                end();
+            };
+
+            end();
+        };
+
+        end();
+    },
+    'get_addressgroup ok');
+
 done_testing();
