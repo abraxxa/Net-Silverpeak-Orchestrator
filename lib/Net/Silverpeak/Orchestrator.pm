@@ -347,4 +347,23 @@ sub list_addressgroup_names($self) {
     return $res->data;
 }
 
+=method create_or_update_addressgroup
+
+Takes a address group name and a hashref of address group config.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub create_or_update_addressgroup($self, $name, $data) {
+    $data->{name} = $name;
+    $data->{type} = 'AG';
+    my $res = $self->post('/gms/rest/ipObjects/addressGroup', $data);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 1;

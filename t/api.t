@@ -193,5 +193,20 @@ is($orchestrator->list_addressgroups,
     },
     'list_addressgroups ok');
 
+ok($orchestrator->create_or_update_addressgroup('Testgroup1', {
+        rules => [
+            {
+                includedIPs => [qw(
+                    10.2.0.0/24
+                    10.3.0.1-15
+                    10.0.0.2
+                    10.0.0.1
+                    10.3.0.30-40
+                    10.1.0.0/24
+                )],
+            },
+        ],
+    }),
+    'create_or_update_addressgroup ok');
 
 done_testing();
