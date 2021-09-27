@@ -22,6 +22,7 @@ Revision history for Net-Silverpeak-Orchestrator
     - add delete_servicegroup method
     - add update_servicegroup method
     - handle error responses that don't contain the expected error attribute
+    - update API tests for Silverpeak Orchestrator version 9.1
 
 0.001002  2021-02-19 07:35:30+01:00 Europe/Vienna
     - fix Data::Dumper::Concise usage in t/api.t

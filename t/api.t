@@ -342,6 +342,9 @@ subtest_buffered 'service groups' => sub {
                         field excludedGroups => array {
                             etc();
                         };
+                        field icmpTypes => array {
+                            etc();
+                        };
                         field comment => E();
 
                         end();
@@ -423,6 +426,9 @@ subtest_buffered 'service groups' => sub {
                     field excludedGroups => array {
                         end();
                     };
+                    field icmpTypes => array {
+                        end();
+                    };
                     field comment => U();
 
                     end();
@@ -447,6 +453,9 @@ subtest_buffered 'service groups' => sub {
                         end();
                     };
                     field excludedGroups => array {
+                        end();
+                    };
+                    field icmpTypes => array {
                         end();
                     };
                     field comment => U();
@@ -524,6 +533,9 @@ subtest_buffered 'service groups' => sub {
                     field excludedGroups => array {
                         end();
                     };
+                    field icmpTypes => array {
+                        end();
+                    };
                     field comment => U();
 
                     end();
@@ -547,6 +559,9 @@ subtest_buffered 'service groups' => sub {
                         end();
                     };
                     field excludedGroups => array {
+                        end();
+                    };
+                    field icmpTypes => array {
                         end();
                     };
                     field comment => U();
