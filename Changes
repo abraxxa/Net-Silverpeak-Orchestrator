@@ -1,6 +1,8 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+
+0.002000  2021-09-27 17:42:44+02:00 Europe/Vienna
     - fix hardcoded template group name instead of
       NET_SILVERPEAK_ORCHESTRATOR_POLICY environment variable
     - skip appliance tests if Orchestrator has none assigned
