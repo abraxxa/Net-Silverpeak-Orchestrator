@@ -21,6 +21,7 @@ Revision history for Net-Silverpeak-Orchestrator
     - add get_servicegroup method
     - add delete_servicegroup method
     - add update_servicegroup method
+    - handle error responses that don't contain the expected error attribute
 
 0.001002  2021-02-19 07:35:30+01:00 Europe/Vienna
     - fix Data::Dumper::Concise usage in t/api.t

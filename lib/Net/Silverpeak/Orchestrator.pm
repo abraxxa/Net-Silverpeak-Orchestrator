@@ -106,7 +106,9 @@ sub _build_user_agent ($self) {
 }
 
 sub _error_handler ($self, $res) {
-    my $error_message = $res->data;
+    my $error_message = ref $res->data eq 'HASH' && exists $res->data->{error}
+        ? $res->data->{error}
+        : $res->response->decoded_content;
 
     croak('error (' . $res->code . '): ' . $error_message);
 }
