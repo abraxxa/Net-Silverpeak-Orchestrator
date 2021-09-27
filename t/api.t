@@ -27,6 +27,16 @@ END {
 like($orchestrator->get_version, qr/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/,
     'get_version ok');
 
+like (
+    dies {
+        my $res = $orchestrator->get('/gms/rest/nonexisting');
+        $orchestrator->_error_handler($res)
+            unless $res->code == 200;
+    },
+    qr/^error \(404\): /,
+    'nonexisting url throws correct exception'
+);
+
 is(my $templategroups = $orchestrator->list_templategroups,
     array {
         etc();
