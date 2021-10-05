@@ -511,4 +511,54 @@ sub delete_servicegroup($self, $name) {
     return 1;
 }
 
+=method list_domain_applications
+
+Returns an arrayref of domain name applications for a resource key which
+defaults to 'userDefined'.
+
+=cut
+
+sub list_domain_applications($self, $resource_key='userDefined') {
+    my $res = $self->get('/gms/rest/applicationDefinition/dnsClassification',
+        { resourceKey => $resource_key });
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
+=method create_or_update_domain_application
+
+Takes a domain name application domain, not name, and a hashref of its config.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub create_or_update_domain_application($self, $domain, $data) {
+    $data->{domain} = $domain;
+    my $res = $self->post('/gms/rest/applicationDefinition/dnsClassification2/domain', $data);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return 1;
+}
+
+=method delete_domain_application
+
+Takes a domain name, not application name.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub delete_domain_application($self, $domain) {
+    my $res = $self->delete('/gms/rest/applicationDefinition/dnsClassification/' . $domain);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return 1;
+}
+
 1;

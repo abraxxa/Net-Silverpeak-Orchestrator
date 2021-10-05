@@ -1,6 +1,7 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - add domain name application support
 
 0.002000  2021-09-27 17:42:44+02:00 Europe/Vienna
     - fix hardcoded template group name instead of
