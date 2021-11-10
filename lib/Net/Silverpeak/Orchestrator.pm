@@ -561,4 +561,72 @@ sub delete_domain_application($self, $domain) {
     return 1;
 }
 
+=method list_application_groups
+
+Returns a hashref of application groups indexed by their name for a resource
+key which defaults to 'userDefined'.
+
+=cut
+
+sub list_application_groups($self, $resource_key='userDefined') {
+    my $res = $self->get('/gms/rest/applicationDefinition/applicationTags',
+        { resourceKey => $resource_key });
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
+=method create_or_update_application_group
+
+Takes a application group name, and a hashref of its config.
+
+Returns true on success.
+
+Throws an exception on error.
+
+Because there is no API endpoint for creating or editing a single application
+group, this method has to load all application groups using
+L<list_application_groups>, modify and then save them.
+
+=cut
+
+sub create_or_update_application_group($self, $name, $data) {
+    my $application_groups = $self->list_application_groups;
+    # set or overwrite existing application group
+    $application_groups->{$name} = $data;
+    my $res = $self->post('/gms/rest/applicationDefinition/applicationTags',
+        $application_groups);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return 1;
+}
+
+=method delete_application_group
+
+Takes an application group name.
+
+Returns true on success.
+
+Throws an exception on error.
+
+Because there is no API endpoint for deleting a single application group,
+this method has to load all application groups using
+L<list_application_groups>, remove the requested application group and then
+save them.
+
+=cut
+
+sub delete_application_group($self, $name) {
+    my $application_groups = $self->list_application_groups;
+    # set or overwrite existing application group
+    croak("application '$name' doesn't exist")
+        unless exists $application_groups->{$name};
+    delete $application_groups->{$name};
+    my $res = $self->post('/gms/rest/applicationDefinition/applicationTags',
+        $application_groups);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return 1;
+}
+
 1;
