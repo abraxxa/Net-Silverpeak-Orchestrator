@@ -1,6 +1,7 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - add is_logged_in attribute
 
 0.004000  2021-11-10 11:50:05+01:00 Europe/Vienna
     - add application group support

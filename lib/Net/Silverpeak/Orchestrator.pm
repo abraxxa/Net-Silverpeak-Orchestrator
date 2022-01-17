@@ -5,7 +5,7 @@ package Net::Silverpeak::Orchestrator;
 use 5.024;
 use Moo;
 use feature 'signatures';
-use Types::Standard qw( Str );
+use Types::Standard qw( Bool Str );
 use Carp qw( croak );
 use HTTP::CookieJar;
 use List::Util qw( any );
@@ -73,6 +73,18 @@ has 'api_key' => (
     predicate => 1,
 );
 
+=attr is_logged_in
+
+Returns true if successfully logged in.
+
+=cut
+
+has 'is_logged_in' => (
+    isa     => Bool,
+    is      => 'rwp',
+    default => sub { 0 },
+);
+
 with 'Role::REST::Client';
 
 has '+persistent_headers' => (
@@ -132,6 +144,8 @@ sub login($self) {
     $self->_error_handler($res)
         unless $res->code == 200;
 
+    $self->_set_is_logged_in(1);
+
     return 1;
 }
 
@@ -149,6 +163,8 @@ sub logout($self) {
     my $res = $self->get('/gms/rest/authentication/logout');
     $self->_error_handler($res)
         unless $res->code == 200;
+
+    $self->_set_is_logged_in(0);
 
     return 1;
 }
