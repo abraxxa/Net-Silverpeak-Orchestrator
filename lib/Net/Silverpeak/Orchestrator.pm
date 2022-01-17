@@ -645,7 +645,9 @@ sub delete_application_group($self, $name) {
     return 1;
 }
 
-sub DEMOLISH ($self, $in_global_destruction) {
+sub DEMOLISH {
+    my $self = shift;
+
     $self->logout
         if $self->has_user
         && $self->has_passwd
