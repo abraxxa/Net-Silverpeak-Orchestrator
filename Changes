@@ -1,6 +1,8 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - fix list_application_groups ok when nested application groups exist
+      the returned hash also contains a 'parentGroup' key if it's nested
     - add is_logged_in attribute
     - automatically log out when object is destroyed
       to not leave stale Orchestrator sessions
