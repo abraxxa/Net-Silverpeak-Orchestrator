@@ -2,6 +2,8 @@ Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
     - add is_logged_in attribute
+    - automatically log out when object is destroyed
+      to not leave stale Orchestrator sessions
 
 0.004000  2021-11-10 11:50:05+01:00 Europe/Vienna
     - add application group support

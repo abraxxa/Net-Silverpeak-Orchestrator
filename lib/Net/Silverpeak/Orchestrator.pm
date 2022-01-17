@@ -645,4 +645,11 @@ sub delete_application_group($self, $name) {
     return 1;
 }
 
+sub DEMOLISH ($self, $in_global_destruction) {
+    $self->logout
+        if $self->has_user
+        && $self->has_passwd
+        && $self->is_logged_in;
+}
+
 1;
