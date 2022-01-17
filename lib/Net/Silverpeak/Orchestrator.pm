@@ -645,6 +645,9 @@ sub delete_application_group($self, $name) {
     return 1;
 }
 
+=for Pod::Coverage DEMOLISH
+=cut
+
 sub DEMOLISH {
     my $self = shift;
 
