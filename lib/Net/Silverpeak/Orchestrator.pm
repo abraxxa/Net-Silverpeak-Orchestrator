@@ -144,6 +144,11 @@ sub login($self) {
     $self->_error_handler($res)
         unless $res->code == 200;
 
+    my @cookies = $self->user_agent->cookie_jar->cookies_for($self->server);
+    if (my ($csrf_cookie) = grep { $_->{name} eq 'orchCsrfToken' } @cookies ) {
+        $self->set_persistent_header('X-XSRF-TOKEN' => $csrf_cookie->{value});
+    }
+
     $self->_set_is_logged_in(1);
 
     return 1;
@@ -163,6 +168,8 @@ sub logout($self) {
     my $res = $self->get('/gms/rest/authentication/logout');
     $self->_error_handler($res)
         unless $res->code == 200;
+
+    delete $self->persistent_headers->{'X-XSRF-TOKEN'};
 
     $self->_set_is_logged_in(0);
 
