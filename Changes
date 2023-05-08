@@ -1,6 +1,8 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+
+0.006000  2023-05-08 17:30:22+02:00 Europe/Budapest
     - add support for user/password login when Enforce CSRF Token Check is
       enabled
 
