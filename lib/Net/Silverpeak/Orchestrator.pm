@@ -367,7 +367,7 @@ sub list_addressgroup_names($self) {
 
 =method get_addressgroup
 
-Returns a address group by name.
+Returns an address group by name.
 
 =cut
 
@@ -380,7 +380,7 @@ sub get_addressgroup($self, $name) {
 
 =method create_or_update_addressgroup
 
-Takes a address group name and a hashref of address group config.
+Takes an address group name and a hashref of address group config.
 
 Returns true on success.
 
@@ -399,7 +399,7 @@ sub create_or_update_addressgroup($self, $name, $data) {
 
 =method update_addressgroup
 
-Takes a address group name and a hashref of address group config.
+Takes an address group name and a hashref of address group config.
 
 Returns true on success.
 
@@ -418,7 +418,7 @@ sub update_addressgroup($self, $name, $data) {
 
 =method delete_addressgroup
 
-Takes a address group name.
+Takes an address group name.
 
 Returns true on success.
 
