@@ -156,6 +156,12 @@ is($orchestrator->get_interface_labels_by_type,
     },
     'get_interface_labels_by_type ok');
 
+is($orchestrator->get_ha_groups_by_id,
+    hash {
+        etc();
+    },
+    'get_ha_groups_by_id ok');
+
 is($orchestrator->list_template_applianceassociations,
     hash {
         etc();

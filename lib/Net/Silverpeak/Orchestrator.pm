@@ -332,6 +332,19 @@ sub get_appliance_extrainfo ($self, $id) {
     return $res->data;
 }
 
+=method get_ha_groups_by_id
+
+Returns a hashref of HA groups indexed by their id.
+
+=cut
+
+sub get_ha_groups_by_id ($self) {
+    my $res = $self->get("/gms/rest/haGroups");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method get_deployment
 
 Takes an appliance id.
