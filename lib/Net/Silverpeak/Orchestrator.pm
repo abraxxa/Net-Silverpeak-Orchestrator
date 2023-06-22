@@ -347,6 +347,21 @@ sub get_deployment ($self, $id) {
     return $res->data;
 }
 
+=method get_interface_state
+
+Takes an interface id.
+
+Returns a hashref containing the interface state.
+
+=cut
+
+sub get_interface_state ($self, $id) {
+    my $res = $self->get("/gms/rest/interfaceState/$id");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.

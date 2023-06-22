@@ -175,11 +175,19 @@ SKIP: {
         },
         'get_appliance_extrainfo for existing appliance ok');
 
-    is($orchestrator->get_deployment($test_appliance->{id}),
+    is(my $deployment = $orchestrator->get_deployment($test_appliance->{id}),
         hash {
             etc();
         },
         'get_deployment for existing appliance ok');
+
+    my $test_interface = first { first {  } $_->{applianceIPs}->@* } $deployment->{modeIfs}->@*;
+
+    is($orchestrator->get_interface_state($test_appliance->{id}),
+        hash {
+            etc();
+        },
+        'get_interface_state ok');
 
     is($orchestrator->list_applianceids_by_templategroupname(
         $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
