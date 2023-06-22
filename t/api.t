@@ -1,6 +1,7 @@
 use Test2::V0;
 use Test2::Tools::Compare qw( array bag hash all_items all_values );
 use Test2::Tools::Subtest qw( subtest_buffered );
+use List::Util qw( first );
 use Net::Silverpeak::Orchestrator;
 
 skip_all "environment variables not set"
@@ -144,6 +145,11 @@ ok(
     'get_appliance_extrainfo for not existing appliance throws exception'
 );
 
+ok(
+    dies { $orchestrator->get_deployment('not-existing') },
+    'get_deployment for not existing appliance throws exception'
+);
+
 is($orchestrator->list_template_applianceassociations,
     hash {
         etc();
@@ -153,18 +159,27 @@ is($orchestrator->list_template_applianceassociations,
 SKIP: {
     skip "Orchestrator has no appliances"
         unless $appliances->@*;
+    my $test_appliance = first { $_->{state} == 1 } $appliances->@*;
+    skip "No reachable appliance found"
+        unless defined $test_appliance;
 
-    is($orchestrator->get_appliance($appliances->[0]->{id}),
+    is($orchestrator->get_appliance($test_appliance->{id}),
         hash {
             etc();
         },
         'get_appliance for existing appliance ok');
 
-    is($orchestrator->get_appliance_extrainfo($appliances->[0]->{id}),
+    is($orchestrator->get_appliance_extrainfo($test_appliance->{id}),
         hash {
             etc();
         },
         'get_appliance_extrainfo for existing appliance ok');
+
+    is($orchestrator->get_deployment($test_appliance->{id}),
+        hash {
+            etc();
+        },
+        'get_deployment for existing appliance ok');
 
     is($orchestrator->list_applianceids_by_templategroupname(
         $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),

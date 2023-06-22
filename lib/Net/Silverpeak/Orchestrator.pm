@@ -332,6 +332,21 @@ sub get_appliance_extrainfo ($self, $id) {
     return $res->data;
 }
 
+=method get_deployment
+
+Takes an appliance id.
+
+Returns a hashref containing the deployment data.
+
+=cut
+
+sub get_deployment ($self, $id) {
+    my $res = $self->get("/gms/rest/deployment/$id");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.
