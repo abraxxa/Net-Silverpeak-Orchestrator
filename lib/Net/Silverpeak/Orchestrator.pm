@@ -317,6 +317,21 @@ sub get_appliance($self, $id) {
     return $res->data;
 }
 
+=method get_appliance_extrainfo
+
+Takes an appliance id.
+
+Returns a hashref with additional infos about the appliance like its location.
+
+=cut
+
+sub get_appliance_extrainfo ($self, $id) {
+    my $res = $self->get("/gms/rest/appliance/extraInfo/$id");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.

@@ -139,6 +139,11 @@ ok(
     'get_appliance for not existing appliance throws exception'
 );
 
+ok(
+    dies { $orchestrator->get_appliance_extrainfo('not-existing') },
+    'get_appliance_extrainfo for not existing appliance throws exception'
+);
+
 is($orchestrator->list_template_applianceassociations,
     hash {
         etc();
@@ -154,6 +159,12 @@ SKIP: {
             etc();
         },
         'get_appliance for existing appliance ok');
+
+    is($orchestrator->get_appliance_extrainfo($appliances->[0]->{id}),
+        hash {
+            etc();
+        },
+        'get_appliance_extrainfo for existing appliance ok');
 
     is($orchestrator->list_applianceids_by_templategroupname(
         $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
