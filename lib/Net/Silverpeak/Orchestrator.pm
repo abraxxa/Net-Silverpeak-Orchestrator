@@ -291,6 +291,19 @@ sub delete_templategroup($self, $name) {
     return 1;
 }
 
+=method get_vrf_by_id
+
+Returns a hashref of VRFs indexed by their id.
+
+=cut
+
+sub get_vrf_by_id ($self) {
+    my $res = $self->get("/gms/rest/vrf/config/segments");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_appliances
 
 Returns an arrayref of appliances.

@@ -129,6 +129,13 @@ ok(
         });
     }, 'update_templategroup successful') or note($@);
 
+
+is($orchestrator->get_vrf_by_id,
+    hash {
+        etc();
+    },
+    'get_vrf_by_id ok');
+
 is(my $appliances = $orchestrator->list_appliances,
     array {
         etc();
