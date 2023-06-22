@@ -150,6 +150,12 @@ ok(
     'get_deployment for not existing appliance throws exception'
 );
 
+is($orchestrator->get_interface_labels_by_type,
+    hash {
+        etc();
+    },
+    'get_interface_labels_by_type ok');
+
 is($orchestrator->list_template_applianceassociations,
     hash {
         etc();

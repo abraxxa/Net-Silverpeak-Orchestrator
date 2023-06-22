@@ -362,6 +362,19 @@ sub get_interface_state ($self, $id) {
     return $res->data;
 }
 
+=method get_interface_labels_by_type
+
+Returns a hashref containing the interface labels indexed by LAN/WAN and their id.
+
+=cut
+
+sub get_interface_labels_by_type ($self) {
+    my $res = $self->get("/gms/rest/gms/interfaceLabels");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.
