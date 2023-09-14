@@ -1,6 +1,8 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+
+0.008000  2023-09-14 14:21:59+02:00 Europe/Vienna
     - enable TLS verification by default
       by requiring HTTP::Tiny 0.088
 
