@@ -48,7 +48,7 @@ Currently it is developed and tested against version 9.0.2.
 =item http 500 response on api key authentication
 
 Orchestrator versions before version 9.0.4 respond with a http 500 error on
-every request using an api key that has no expriation date set.
+every request using an api key that has no expiration date set.
 The only workaround is to set an expiration date for it.
 
 =back
