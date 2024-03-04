@@ -1,6 +1,8 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+
+0.009000  2024-03-04 13:05:30+01:00 Europe/Vienna
     - add has_segmentation_enabled
     - add get_vrf_security_policies_by_ids
     - add update_vrf_security_policies_by_ids
