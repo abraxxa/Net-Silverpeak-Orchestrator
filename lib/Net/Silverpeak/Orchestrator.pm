@@ -332,6 +332,23 @@ sub get_vrf_security_policies_by_ids ($self, $source_vrf_id, $destination_vrf_id
     return $res->data;
 }
 
+=method update_vrf_security_policies_by_ids
+
+Takes the source and destination vrf ids.
+
+Returns true on success.
+
+Throws an exception on error.
+
+=cut
+
+sub update_vrf_security_policies_by_ids ($self, $source_vrf_id, $destination_vrf_id, $data) {
+    my $res = $self->post('/gms/rest/vrf/config/securityPolicies/' . $source_vrf_id . '_' . $destination_vrf_id, $data);
+    $self->_error_handler($res)
+        unless $res->code == 204;
+    return 1;
+}
+
 =method list_appliances
 
 Returns an arrayref of appliances.
