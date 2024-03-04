@@ -304,6 +304,19 @@ sub has_segmentation_enabled ($self) {
     return $res->data->{enable};
 }
 
+=method get_vrf_zones_map
+
+Returns a hashref of firewall zones indexed by VRF id and firewall zone id.
+
+=cut
+
+sub get_vrf_zones_map ($self) {
+    my $res = $self->get("/gms/rest/zones/vrfZonesMap");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method get_vrf_by_id
 
 Returns a hashref of VRFs indexed by their id.

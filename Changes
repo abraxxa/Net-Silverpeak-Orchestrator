@@ -1,6 +1,7 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - add get_vrf_zones_map
 
 0.009000  2024-03-04 13:05:30+01:00 Europe/Vienna
     - add has_segmentation_enabled

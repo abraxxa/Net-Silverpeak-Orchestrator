@@ -138,6 +138,22 @@ is($orchestrator->get_vrf_by_id,
     },
     'get_vrf_by_id ok');
 
+is($orchestrator->get_vrf_zones_map,
+    hash {
+        all_keys  match qr/^[0-9]+$/;
+        all_vals hash {
+            all_keys  match qr/^[0-9]+$/;
+            all_vals hash {
+                field id    => match qr/^[0-9]+$/;
+                field name  => D();
+                end();
+            };
+            etc();
+        };
+        etc();
+    },
+    'get_vrf_zones_map ok');
+
 is(my $vrf_security_policy = $orchestrator->get_vrf_security_policies_by_ids(0, 0),
     hash {
         field data      => hash {
