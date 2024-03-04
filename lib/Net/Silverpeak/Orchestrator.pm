@@ -291,6 +291,19 @@ sub delete_templategroup($self, $name) {
     return 1;
 }
 
+=method has_segmentation_enabled
+
+Returns true if segmentation is enabled, else false.
+
+=cut
+
+sub has_segmentation_enabled ($self) {
+    my $res = $self->get('/gms/rest/vrf/config/enable');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data->{enable};
+}
+
 =method get_vrf_by_id
 
 Returns a hashref of VRFs indexed by their id.

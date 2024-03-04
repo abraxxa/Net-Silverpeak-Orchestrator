@@ -129,6 +129,8 @@ ok(
         });
     }, 'update_templategroup successful') or note($@);
 
+ok($orchestrator->has_segmentation_enabled,
+    'Orchestrator has segmentation enabled');
 
 is($orchestrator->get_vrf_by_id,
     hash {
