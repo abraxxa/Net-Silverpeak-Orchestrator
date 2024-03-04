@@ -138,6 +138,21 @@ is($orchestrator->get_vrf_by_id,
     },
     'get_vrf_by_id ok');
 
+is($orchestrator->get_vrf_security_policies_by_ids(0, 0),
+    hash {
+        field data      => hash {
+            etc();
+        };
+        field settings  => hash {
+            etc();
+        };
+        field options   => hash {
+            etc();
+        };
+        end();
+    },
+    'get_vrf_security_policies_by_ids ok');
+
 is(my $appliances = $orchestrator->list_appliances,
     array {
         etc();

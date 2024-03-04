@@ -317,6 +317,21 @@ sub get_vrf_by_id ($self) {
     return $res->data;
 }
 
+=method get_vrf_security_policies_by_ids
+
+Takes the source and destination vrf ids.
+
+Returns a hashref containing all settings and security policies of a vrf.
+
+=cut
+
+sub get_vrf_security_policies_by_ids ($self, $source_vrf_id, $destination_vrf_id) {
+    my $res = $self->get('/gms/rest/vrf/config/securityPolicies/' . $source_vrf_id . '_' . $destination_vrf_id);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_appliances
 
 Returns an arrayref of appliances.
