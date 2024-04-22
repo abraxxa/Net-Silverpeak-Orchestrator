@@ -1,6 +1,7 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - add support for version 9.3+ API endpoints
 
 0.010000  2024-03-04 14:28:16+01:00 Europe/Vienna
     - add get_vrf_zones_map

@@ -39,7 +39,10 @@ no warnings "experimental::signatures";
 =head1 DESCRIPTION
 
 This module is a client library for the Silverpeak Orchestrator REST API.
-Currently it is developed and tested against version 9.0.2.
+Currently it is developed and tested against version 9.3.3.
+
+The REST API endpoints have changed with version 9.3 and since version 0.011
+this module handles both.
 
 =head1 KNOWN SILVERPEAK ORCHESTRATOR BUGS
 
@@ -190,6 +193,15 @@ sub get_version($self) {
     return $res->data->{current};
 }
 
+sub _is_version_93 ($self) {
+    state $rv;
+    return $rv
+        if defined $rv;
+    my $version = $self->get_version;
+    my ($major, $minor) = split(/\./, $version);
+    return ($major == 9 && $minor >= 3) || $major > 9;
+}
+
 =method list_templategroups
 
 Returns an arrayref of template groups.
@@ -210,10 +222,16 @@ Returns a template group by name.
 =cut
 
 sub get_templategroup($self, $name) {
-    my $res = $self->get('/gms/rest/template/templateGroups/' . $name);
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/template/templateGroups?templateGroup=' . $name)
+        : $self->get('/gms/rest/template/templateGroups/' . $name);
     $self->_error_handler($res)
         unless $res->code == 200;
-    return $res->data;
+    # version 9.3+ returns an array with a single hashref
+    # instead of the hashref
+    return $self->_is_version_93
+        ? $res->data->[0]
+        : $res->data;
 }
 
 =method create_templategroup
@@ -249,8 +267,11 @@ sub update_templates_of_templategroup($self, $name, $templatenames) {
     croak('templates names must be passed as an arrayref')
         unless ref $templatenames eq 'ARRAY';
 
-    my $res = $self->post('/gms/rest/template/templateSelection/' . $name,
-        $templatenames);
+    my $res = $self->_is_version_93
+        ? $self->post("/gms/rest/template/templateSelection?templateGroup=$name",
+            $templatenames)
+        : $self->post('/gms/rest/template/templateSelection/' . $name,
+            $templatenames);
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -267,8 +288,9 @@ Throws an exception on error.
 =cut
 
 sub update_templategroup($self, $name, $data) {
-    my $res = $self->post('/gms/rest/template/templateGroups/' . $name,
-        $data);
+    my $res = $self->_is_version_93
+        ? $self->post("/gms/rest/template/templateGroups?templateGroup=$name", $data)
+        : $self->post('/gms/rest/template/templateGroups/' . $name, $data);
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -285,7 +307,9 @@ Throws an exception on error.
 =cut
 
 sub delete_templategroup($self, $name) {
-    my $res = $self->delete('/gms/rest/template/templateGroups/' . $name);
+    my $res = $self->_is_version_93
+        ? $self->delete("/gms/rest/template/templateGroups?templateGroup=$name")
+        : $self->delete('/gms/rest/template/templateGroups/' . $name);
     $self->_error_handler($res)
         unless $res->code == 204;
     return 1;
@@ -339,7 +363,9 @@ Returns a hashref containing all settings and security policies of a vrf.
 =cut
 
 sub get_vrf_security_policies_by_ids ($self, $source_vrf_id, $destination_vrf_id) {
-    my $res = $self->get('/gms/rest/vrf/config/securityPolicies/' . $source_vrf_id . '_' . $destination_vrf_id);
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/vrf/config/securityPolicies?map=' . $source_vrf_id . '_' . $destination_vrf_id)
+        : $self->get('/gms/rest/vrf/config/securityPolicies/' . $source_vrf_id . '_' . $destination_vrf_id);
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -356,7 +382,9 @@ Throws an exception on error.
 =cut
 
 sub update_vrf_security_policies_by_ids ($self, $source_vrf_id, $destination_vrf_id, $data) {
-    my $res = $self->post('/gms/rest/vrf/config/securityPolicies/' . $source_vrf_id . '_' . $destination_vrf_id, $data);
+    my $res = $self->_is_version_93
+        ? $self->post('/gms/rest/vrf/config/securityPolicies?map=' . $source_vrf_id . '_' . $destination_vrf_id, $data)
+        : $self->post('/gms/rest/vrf/config/securityPolicies/' . $source_vrf_id . '_' . $destination_vrf_id, $data);
     $self->_error_handler($res)
         unless $res->code == 204;
     return 1;
@@ -382,7 +410,9 @@ Returns an appliance by id.
 =cut
 
 sub get_appliance($self, $id) {
-    my $res = $self->get('/gms/rest/appliance/' . $id);
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/appliance?nePk=' . $id)
+        : $self->get('/gms/rest/appliance/' . $id);
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -397,7 +427,9 @@ Returns a hashref with additional infos about the appliance like its location.
 =cut
 
 sub get_appliance_extrainfo ($self, $id) {
-    my $res = $self->get("/gms/rest/appliance/extraInfo/$id");
+    my $res = $self->_is_version_93
+        ? $self->get("/gms/rest/appliance/extraInfo?nePk=$id")
+        : $self->get("/gms/rest/appliance/extraInfo/$id");
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -425,7 +457,9 @@ Returns a hashref containing the deployment data.
 =cut
 
 sub get_deployment ($self, $id) {
-    my $res = $self->get("/gms/rest/deployment/$id");
+    my $res = $self->_is_version_93
+        ? $self->get("/gms/rest/deployment?nePk=$id")
+        : $self->get("/gms/rest/deployment/$id");
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -440,7 +474,9 @@ Returns a hashref containing the interface state.
 =cut
 
 sub get_interface_state ($self, $id) {
-    my $res = $self->get("/gms/rest/interfaceState/$id");
+    my $res = $self->_is_version_93
+        ? $self->get("/gms/rest/interfaceState?nePk=$id")
+        : $self->get("/gms/rest/interfaceState/$id");
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -521,7 +557,9 @@ Returns an address group by name.
 =cut
 
 sub get_addressgroup($self, $name) {
-    my $res = $self->get('/gms/rest/ipObjects/addressGroup/' . $name);
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/ipObjects/addressGroup/?name=' . $name)
+        : $self->get('/gms/rest/ipObjects/addressGroup/' . $name);
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -576,7 +614,9 @@ Throws an exception on error.
 =cut
 
 sub delete_addressgroup($self, $name) {
-    my $res = $self->delete('/gms/rest/ipObjects/addressGroup/' . $name);
+    my $res = $self->_is_version_93
+        ? $self->delete('/gms/rest/ipObjects/addressGroup/?name=' . $name)
+        : $self->delete('/gms/rest/ipObjects/addressGroup/' . $name);
     $self->_error_handler($res)
         unless $res->code == 204;
     return 1;
@@ -615,7 +655,9 @@ Returns a service group by name.
 =cut
 
 sub get_servicegroup($self, $name) {
-    my $res = $self->get('/gms/rest/ipObjects/serviceGroup/' . $name);
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/ipObjects/serviceGroup/?name=' . $name)
+        : $self->get('/gms/rest/ipObjects/serviceGroup/' . $name);
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
@@ -670,7 +712,9 @@ Throws an exception on error.
 =cut
 
 sub delete_servicegroup($self, $name) {
-    my $res = $self->delete('/gms/rest/ipObjects/serviceGroup/' . $name);
+    my $res = $self->_is_version_93
+        ? $self->delete('/gms/rest/ipObjects/serviceGroup/?name=' . $name)
+        : $self->delete('/gms/rest/ipObjects/serviceGroup/' . $name);
     $self->_error_handler($res)
         unless $res->code == 204;
     return 1;
@@ -720,7 +764,9 @@ Throws an exception on error.
 =cut
 
 sub delete_domain_application($self, $domain) {
-    my $res = $self->delete('/gms/rest/applicationDefinition/dnsClassification/' . $domain);
+    my $res = $self->_is_version_93
+        ? $self->delete('/gms/rest/applicationDefinition/dnsClassification?domain=' . $domain)
+        : $self->delete('/gms/rest/applicationDefinition/dnsClassification/' . $domain);
     $self->_error_handler($res)
         unless $res->code == 200;
     return 1;
