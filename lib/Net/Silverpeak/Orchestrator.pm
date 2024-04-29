@@ -448,6 +448,19 @@ sub get_ha_groups_by_id ($self) {
     return $res->data;
 }
 
+=method list_groups
+
+Returns an arrayref of appliance groups.
+
+=cut
+
+sub list_groups ($self) {
+    my $res = $self->get('/gms/rest/gms/group');
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method get_deployment
 
 Takes an appliance id.
