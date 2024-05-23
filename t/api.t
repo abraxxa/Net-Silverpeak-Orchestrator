@@ -25,10 +25,16 @@ END {
         if defined $orchestrator;
 }
 
-like($orchestrator->get_version, qr/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/,
+my $version = $orchestrator->get_version;
+like($version, qr/^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/,
     'get_version ok');
 
 is($orchestrator->_is_version_93, D(), '_is_version_93 ok');
+diag 'running against a version ' . (
+    $orchestrator->_is_version_93
+    ? '>= 9.3'
+    : '< 9.3')
+    . " Orchestrator: $version";
 
 like (
     dies {
