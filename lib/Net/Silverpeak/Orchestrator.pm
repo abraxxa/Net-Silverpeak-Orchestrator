@@ -525,6 +525,23 @@ sub get_appliance_ipsla_configs ($self, $id) {
     return $res->data;
 }
 
+=method get_appliance_ipsla_states
+
+Takes an appliance id.
+
+Returns a hashref containing all IP SLA states.
+
+=cut
+
+sub get_appliance_ipsla_states ($self, $id) {
+    my $res = $self->_is_version_93
+        ? $self->get("/gms/rest/ipsla/state/managers?nePk=$id")
+        : $self->get("/gms/rest/ipsla/state/managers/$id");
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.

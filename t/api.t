@@ -258,6 +258,12 @@ SKIP: {
         },
         'get_appliance_ipsla_configs ok');
 
+    is($orchestrator->get_appliance_ipsla_states($test_appliance->{id}),
+        hash {
+            etc();
+        },
+        'get_appliance_ipsla_states ok');
+
     is($orchestrator->list_applianceids_by_templategroupname(
         $ENV{NET_SILVERPEAK_ORCHESTRATOR_POLICY}),
         array {
