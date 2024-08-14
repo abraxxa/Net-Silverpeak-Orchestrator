@@ -233,6 +233,8 @@ SKIP: {
     skip "No reachable appliance found"
         unless defined $test_appliance;
 
+    diag "using appliance $test_appliance->{hostName} for tests";
+
     is($orchestrator->get_appliance($test_appliance->{id}),
         hash {
             etc();
