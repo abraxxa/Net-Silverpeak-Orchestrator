@@ -273,6 +273,12 @@ SKIP: {
         },
         'get_appliance_ipsla_states ok');
 
+    is($orchestrator->get_appliance_bgp_system_config($test_appliance->{id}),
+        hash {
+            etc();
+        },
+        'get_appliance_bgp_system_config ok');
+
     is($orchestrator->get_appliance_bgp_neighbors($test_appliance->{id}),
         hash {
             etc();
