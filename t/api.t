@@ -164,9 +164,9 @@ is($orchestrator->get_vrf_zones_map,
 
 is(my $vrf_security_policy = $orchestrator->get_vrf_security_policies_by_ids(0, 0),
     hash {
-        field data      => hash {
+        field data      => in_set(U(), hash {
             etc();
-        };
+        });
         field settings  => hash {
             etc();
         };
@@ -176,7 +176,8 @@ is(my $vrf_security_policy = $orchestrator->get_vrf_security_policies_by_ids(0, 
         end();
     },
     'get_vrf_security_policies_by_ids ok');
-
+$vrf_security_policy->{data} = {}
+    unless defined $vrf_security_policy->{data};
 ok($orchestrator->update_vrf_security_policies_by_ids(0, 0, $vrf_security_policy),
     'update_vrf_security_policies_by_ids ok');
 
