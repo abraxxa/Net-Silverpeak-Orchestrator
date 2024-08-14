@@ -542,6 +542,23 @@ sub get_appliance_ipsla_states ($self, $id) {
     return $res->data;
 }
 
+=method get_appliance_bgp_neighbors
+
+Takes an appliance id and an optional hashref with additional query parameters.
+
+Returns a hashref containing all BGP neighbors.
+
+=cut
+
+sub get_appliance_bgp_neighbors ($self, $id, $params = {}) {
+    my $res = $self->_is_version_93
+        ? $self->get("/gms/rest/bgp/config/allVrfs/neighbor?nePk=$id", $params)
+        : $self->get("/gms/rest/bgp/config/allVrfs/neighbor/$id", $params);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.
