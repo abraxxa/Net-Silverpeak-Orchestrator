@@ -559,6 +559,23 @@ sub get_appliance_bgp_system_config ($self, $id, $params = {}) {
     return $res->data;
 }
 
+=method get_appliance_bgp_system_config_allvrfs
+
+Takes an appliance id and an optional hashref with additional query parameters.
+
+Returns a hashref containing the BGP system config for all VRFs indexed by VRF ID.
+
+=cut
+
+sub get_appliance_bgp_system_config_allvrfs ($self, $id, $params = {}) {
+    my $res = $self->_is_version_93
+        ? $self->get("/gms/rest/bgp/config/allVrfs/system?nePk=$id", $params)
+        : $self->get("/gms/rest/bgp/config/allVrfs/system/$id", $params);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method get_appliance_bgp_neighbors
 
 Takes an appliance id and an optional hashref with additional query parameters.

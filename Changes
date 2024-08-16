@@ -1,6 +1,7 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - add get_appliance_bgp_system_config_allvrfs
 
 0.014000  2024-08-14 14:35:22+02:00 Europe/Vienna
     - add get_appliance_bgp_system_config
