@@ -826,8 +826,14 @@ defaults to 'userDefined'.
 =cut
 
 sub list_domain_applications($self, $resource_key='userDefined') {
-    my $res = $self->get('/gms/rest/applicationDefinition/dnsClassification',
-        { resourceKey => $resource_key });
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/applicationDefinition',
+            {
+                resourceKey => $resource_key,
+                base => 'dnsClassification',
+            })
+        : $self->get('/gms/rest/applicationDefinition/dnsClassification',
+            { resourceKey => $resource_key });
     $self->_error_handler($res)
         unless $res->code == 200;
     return $res->data;
