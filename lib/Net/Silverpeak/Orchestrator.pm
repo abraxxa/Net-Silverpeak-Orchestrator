@@ -129,7 +129,7 @@ sub _error_handler ($self, $res) {
     croak('error (' . $res->code . '): ' . $error_message);
 }
 
-sub post_with_params ($self, $endpoint, $params, @rest) {
+sub _post_with_params ($self, $endpoint, $params, @rest) {
     my $uri_params = $self->_urlencode_data($params);
     my $uri = $endpoint;
     $uri .= $endpoint =~ /\?/
@@ -279,7 +279,7 @@ sub update_templates_of_templategroup($self, $name, $templatenames) {
         unless ref $templatenames eq 'ARRAY';
 
     my $res = $self->_is_version_93
-        ? $self->post_with_params('/gms/rest/template/templateSelection',
+        ? $self->_post_with_params('/gms/rest/template/templateSelection',
             { templateGroup => $name }, $templatenames)
         : $self->post('/gms/rest/template/templateSelection/' . uri_escape($name),
             $templatenames);
@@ -300,7 +300,7 @@ Throws an exception on error.
 
 sub update_templategroup($self, $name, $data) {
     my $res = $self->_is_version_93
-        ? $self->post_with_params('/gms/rest/template/templateGroups', { templateGroup => $name }, $data)
+        ? $self->_post_with_params('/gms/rest/template/templateGroups', { templateGroup => $name }, $data)
         : $self->post('/gms/rest/template/templateGroups/' . uri_escape($name), $data);
     $self->_error_handler($res)
         unless $res->code == 200;
@@ -396,7 +396,7 @@ Throws an exception on error.
 sub update_vrf_security_policies_by_ids ($self, $source_vrf_id, $destination_vrf_id, $data) {
     my $mapname = $source_vrf_id . '_' . $destination_vrf_id;
     my $res = $self->_is_version_93
-        ? $self->post_with_params('/gms/rest/vrf/config/securityPolicies', { map => $mapname }, $data)
+        ? $self->_post_with_params('/gms/rest/vrf/config/securityPolicies', { map => $mapname }, $data)
         : $self->post('/gms/rest/vrf/config/securityPolicies/' . uri_escape($mapname), $data);
     $self->_error_handler($res)
         unless $res->code == 204;
