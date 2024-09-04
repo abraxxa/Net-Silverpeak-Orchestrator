@@ -1,6 +1,7 @@
 Revision history for Net-Silverpeak-Orchestrator
 
 {{ $NEXT }}
+    - ensure all URI parameters are URI encoded
 
 0.015001  2024-08-24 19:44:11+02:00 Europe/Vienna
     - fix list_domain_applications for Orchestrator version 9.3+
