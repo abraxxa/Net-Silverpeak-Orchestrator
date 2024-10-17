@@ -606,6 +606,30 @@ sub get_appliance_bgp_neighbors ($self, $id, $params = {}) {
     return $res->data;
 }
 
+=method get_appliance_backups
+
+Takes an appliance id and an optional hashref with additional query parameters.
+The runningConfig parameter defaults to false vs. true when not specified so
+the contents of all backups aren't fetched.
+
+By passing { runningConfig => 'true', id => $id } as parameters, the contents
+of a single backup can be fetched.
+
+Returns an arrayref of hashrefs containing all available backups.
+
+=cut
+
+sub get_appliance_backups ($self, $id, $params = {}) {
+    $params->{runningConfig} = 'false'
+        unless exists $params->{runningConfig};
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/appliance/backup', { nePk => $id, $params->%* })
+        : $self->get('/gms/rest/appliance/backup/' . uri_escape($id), $params);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method list_template_applianceassociations
 
 Returns a hashref of template to appliances associations.
