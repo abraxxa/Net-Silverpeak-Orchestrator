@@ -6,6 +6,7 @@ Revision history for Net-Silverpeak-Orchestrator
     - fix list_domain_applications test for wildcard domains
     - fix create_or_update_domain_application test for newer Orchestrator versions
       that throw an exception when trying to rename an existing domain application
+    - add get_appliance_rest and create_or_update_appliance_rest
 
 0.016000  2024-10-17 17:51:03+02:00 Europe/Vienna
     - add get_appliance_backups

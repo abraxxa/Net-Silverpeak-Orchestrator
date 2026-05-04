@@ -247,6 +247,12 @@ SKIP: {
         },
         'get_appliance_extrainfo for existing appliance ok');
 
+    is(my $vti = $orchestrator->get_appliance_rest($test_appliance->{id}, '/virtualif/vti'),
+        hash {
+            etc();
+        },
+        'get_appliance_rest for existing appliance ok');
+
     is(my $deployment = $orchestrator->get_deployment($test_appliance->{id}),
         hash {
             etc();
@@ -338,6 +344,29 @@ SKIP: {
             etc();
         },
         'list_appliances_by_templategroupname ok');
+}
+
+SKIP: {
+    skip "NET_SILVERPEAK_ORCHESTRATOR_APPLIANCE not set, skipping write tests."
+        if ( ! defined $ENV{NET_SILVERPEAK_ORCHESTRATOR_APPLIANCE}
+            || ! length $ENV{NET_SILVERPEAK_ORCHESTRATOR_APPLIANCE} );
+
+    skip "Orchestrator has no appliances"
+        unless $appliances->@*;
+
+    my $test_appliance = first { $ENV{NET_SILVERPEAK_ORCHESTRATOR_APPLIANCE} eq $_->{hostName} } $appliances->@*;
+
+    skip "$ENV{NET_SILVERPEAK_ORCHESTRATOR_APPLIANCE} not found on orchestrator - skipping appliance write tests"
+        unless defined $test_appliance;
+
+    is(my $vti = $orchestrator->get_appliance_rest($test_appliance->{id}, '/virtualif/vti'),
+        hash {
+            etc();
+        },
+        'get_appliance_rest for fetching data for create_or_update_appliance_rest test ok');
+
+    ok($orchestrator->create_or_update_appliance_rest($test_appliance->{id}, '/virtualif/vti', $vti),
+        'create_or_update_appliance_rest for existing appliance ok');
 }
 
 subtest_buffered 'address groups' => sub {
