@@ -520,6 +520,9 @@ subtest_buffered 'service groups' => sub {
                         field icmpTypes => array {
                             etc();
                         };
+                        field icmpCodes => array {
+                            etc();
+                        };
                         field comment => E();
 
                         end();
@@ -604,6 +607,9 @@ subtest_buffered 'service groups' => sub {
                     field icmpTypes => array {
                         end();
                     };
+                    field icmpCodes => array {
+                        etc();
+                    };
                     field comment => U();
 
                     end();
@@ -632,6 +638,9 @@ subtest_buffered 'service groups' => sub {
                     };
                     field icmpTypes => array {
                         end();
+                    };
+                    field icmpCodes => array {
+                        etc();
                     };
                     field comment => U();
 
@@ -711,6 +720,9 @@ subtest_buffered 'service groups' => sub {
                     field icmpTypes => array {
                         end();
                     };
+                    field icmpCodes => array {
+                        etc();
+                    };
                     field comment => U();
 
                     end();
@@ -738,6 +750,9 @@ subtest_buffered 'service groups' => sub {
                     };
                     field icmpTypes => array {
                         end();
+                    };
+                    field icmpCodes => array {
+                        etc();
                     };
                     field comment => U();
 
