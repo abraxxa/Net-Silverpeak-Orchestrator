@@ -448,6 +448,36 @@ sub get_appliance_extrainfo ($self, $id) {
     return $res->data;
 }
 
+=method get_appliance_rest
+
+To communicate with appliance GET APIs directly.
+
+=cut
+
+sub get_appliance_rest ($self, $id, $url) {
+    my $res = $self->_is_version_93
+        ? $self->get('/gms/rest/appliance/rest', { nePk => $id, url => $url })
+        : $self->get('/gms/rest/appliance/rest/' . uri_escape($id) . '/' . uri_escape($url));
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
+=method create_or_update_appliance_rest
+
+To communicate with appliance POST APIs directly.
+
+=cut
+
+sub create_or_update_appliance_rest ($self, $id, $url, $data) {
+    my $res = $self->_is_version_93
+        ? $self->_post_with_params('/gms/rest/appliance/rest', { nePk => $id, url => $url }, $data)
+        : $self->post('/gms/rest/appliance/rest/' . uri_escape($id) . '/' . uri_escape($url), $data);
+    $self->_error_handler($res)
+        unless $res->code == 200;
+    return $res->data;
+}
+
 =method get_ha_groups_by_id
 
 Returns a hashref of HA groups indexed by their id.
