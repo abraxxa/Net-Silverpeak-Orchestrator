@@ -805,7 +805,7 @@ subtest_buffered 'applications' => sub {
         'create using create_or_update_domain_application ok');
 
     ok($orchestrator->create_or_update_domain_application('acme.example.net', {
-            name        => 'acme.example.net',
+            name        => 'acme_example_net',
             priority    => 90,
         }),
         'update using create_or_update_domain_application ok');
