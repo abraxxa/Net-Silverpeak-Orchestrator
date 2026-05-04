@@ -3,6 +3,7 @@ Revision history for Net-Silverpeak-Orchestrator
 {{ $NEXT }}
     - update tests for Orchestrator version 9.5.7.40081
       which added icmpCodes to service groups
+    - fix list_domain_applications test for wildcard domains
 
 0.016000  2024-10-17 17:51:03+02:00 Europe/Vienna
     - add get_appliance_backups

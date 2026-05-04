@@ -785,7 +785,7 @@ subtest_buffered 'applications' => sub {
     is($orchestrator->list_domain_applications,
         bag {
             all_items hash {
-                field domain => match qr/^[a-zA-Z0-9\-\.]+$/;
+                field domain => match qr/^[a-zA-Z0-9\-\.\*]+$/;
                 field name => match qr/^[a-zA-Z0-9_\-\.]+$/;
                 field description => E();
                 field priority => validator(sub{ $_ >= 0 && $_ <= 100 });
