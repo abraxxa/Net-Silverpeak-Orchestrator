@@ -326,7 +326,7 @@ SKIP: {
                 field runningConfig => D();
                 etc();
             };
-            etc();
+            end();
         },
         'get_appliance_backups with runningConfig and id ok');
 
